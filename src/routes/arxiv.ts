@@ -6,6 +6,7 @@ const app = new Hono();
 
 // BaseURL
 const baseURL = "http://export.arxiv.org/api/query?search_query=all:";
+const pdfBaseURL = "https://arxiv.org/pdf";
 const defaultStartIndex = "0";
 const defaultMaxResults = "50";
 const suggestedPaperTitles: any[] = [
@@ -88,6 +89,18 @@ async function arxivAPICall(
     return responseXML.data;
 }
 
+// Function to Identify PDF link
+function parsePDFLinkFromPaperID(paperID: string) {
+    const extractedId = paperID.split("/").pop();
+    let pdfURL = "";
+    if (extractedId && extractedId.includes(".")) {
+        pdfURL = `${pdfBaseURL}/${extractedId}`;
+    } else {
+        pdfURL = `${pdfBaseURL}/cond-mat/${extractedId}`;
+    }
+    return pdfURL;
+}
+
 // Funtion to clear the response
 async function cleanPapers(rawPapers: any) {
     let cleanedPapers = [];
@@ -100,6 +113,7 @@ async function cleanPapers(rawPapers: any) {
             summary: eachPaper["summary"],
             authors: eachPaper["author"],
             "arxiv:doi": eachPaper["arxiv:doi"] || "",
+            pdfLink: parsePDFLinkFromPaperID(eachPaper["id"]),
         };
 
         // Clean Title
