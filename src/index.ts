@@ -19,13 +19,19 @@ app.get("/", (c) => {
 
 // Routes
 import arxiv from "./routes/arxiv";
-
 app.route("/arxiv", arxiv);
 
-const port = 5400;
+// PORT
+var port = Number.parseInt(process.env.PORT!) || 6400;
 console.log(`Server is running on port ${port}`);
 
 serve({
     fetch: app.fetch,
     port,
+});
+
+// ERROR HANDLING
+app.onError((err, c) => {
+    console.error(`${err}`);
+    return c.json(err.message);
 });
