@@ -5,7 +5,7 @@ import { XMLParser } from "fast-xml-parser";
 const app = new Hono();
 
 // BaseURL
-const baseURL = "http://export.arxiv.org/api/query?search_query=all:";
+const baseURL = "https://export.arxiv.org/api/query?search_query=all:";
 const pdfBaseURL = "https://arxiv.org/pdf";
 const defaultStartIndex = "0";
 const defaultMaxResults = "50";
