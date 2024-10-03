@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 5000
 
 # Start the app using Node.js to run the JavaScript output
-CMD ["node", "index.js"]
+CMD ["node", "src/index.js"]
