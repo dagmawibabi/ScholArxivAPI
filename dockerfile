@@ -7,8 +7,8 @@ WORKDIR /src
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install dependencies (including ts-node and typescript)
+RUN npm install --only=production
 
 # Copy the rest of the application code
 COPY . .
@@ -16,5 +16,5 @@ COPY . .
 # Expose the port on which your Hono app will run
 EXPOSE 5000
 
-# Start the Hono app
-CMD ["node", "index.ts"] 
+# Start the Hono app using ts-node
+CMD ["npx", "ts-node", "src/index.ts"]
