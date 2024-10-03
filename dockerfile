@@ -1,20 +1,20 @@
-# Use the official Node.js image as a base
-FROM node:14
+# Use the official Node.js image as the base image
+FROM node:18-alpine
 
-# Set the working directory
-WORKDIR /
+# Set the working directory in the container
+WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci --only=production
 
 # Copy the rest of the application code
 COPY . .
 
-# Expose the application port (adjust as necessary)
+# Expose the port on which your Hono app will run
 EXPOSE 5000
 
-# Command to run the application
-CMD ["npm", "run", "start"]
+# Start the Hono app
+CMD ["node", "index.js"] 
