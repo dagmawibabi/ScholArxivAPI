@@ -1,6 +1,7 @@
 {
     "name": "scholarxivapi",
     "scripts": {
+        "start": "tsx src/index.ts",
         "dev": "tsx watch src/index.ts"
     },
     "dependencies": {
