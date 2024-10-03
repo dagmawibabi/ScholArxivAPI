@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # Start the Hono app
-CMD ["node", "index.js"] 
+CMD ["node", "index.ts"] 
