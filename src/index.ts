@@ -22,7 +22,8 @@ import arxiv from "./routes/arxiv";
 app.route("/arxiv", arxiv);
 
 // PORT
-var port = Number.parseInt(process.env.PORT!) || 6400;
+var port = process.env.PORT ? Number.parseInt(process.env.PORT) : 6400;
+
 console.log(`Server is running on port ${port}`);
 
 serve({
