@@ -1,21 +1,24 @@
 {
-    "name": "scholarxivapi",
-    "scripts": {
-        "start": "tsx src/index.ts",
-        "dev": "tsx watch src/index.ts",
-        "build": "tsc"
-    },
-    "dependencies": {
-        "@hono/node-server": "^1.13.1",
-        "axios": "^1.7.7",
-        "fast-xml-parser": "^4.5.0",
-        "hono": "^4.6.3",
-        "mongoose": "^8.7.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^5.6.2"
-    },
-    "devDependencies": {
-        "@types/node": "^20.11.17",
-        "tsx": "^4.7.1"
-    }
+  "name": "scholarxivapi",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "dotenv -- tsx watch src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.1",
+    "axios": "^1.7.7",
+    "better-auth": "^0.2.10",
+    "dotenv": "^16.4.5",
+    "fast-xml-parser": "^4.5.0",
+    "hono": "^4.6.3",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.7.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
+  }
 }
