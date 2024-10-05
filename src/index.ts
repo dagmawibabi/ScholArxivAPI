@@ -12,10 +12,7 @@ const app = new Hono();
 app.use(
     "/*",
     cors({
-        origin: [
-            "http://localhost:5173",
-            "https://schol-arxiv-web.vercel.app/",
-        ],
+        origin: ["http://localhost:5173", "https://schol-arxiv-web.vercel.app"],
         credentials: true,
     })
 );

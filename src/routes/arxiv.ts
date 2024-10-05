@@ -1,81 +1,15 @@
 import { Hono } from "hono";
 import axios from "axios";
 import { XMLParser } from "fast-xml-parser";
+import {
+    baseURL,
+    pdfBaseURL,
+    defaultStartIndex,
+    defaultMaxResults,
+    suggestedPaperTitles,
+} from "../lib/constants";
 
 const app = new Hono();
-
-// BaseURL
-const baseURL = "https://export.arxiv.org/api/query?search_query=all:";
-const pdfBaseURL = "https://arxiv.org/pdf";
-const defaultStartIndex = "0";
-const defaultMaxResults = "50";
-const suggestedPaperTitles: any[] = [
-    "acid",
-    "a theory of justice",
-    "attention is all you need",
-    "augmented",
-    "behavioral",
-    "books",
-    "black hole",
-    "brain",
-    "cats",
-    "computer",
-    "creative",
-    "dog",
-    "dna sequencing",
-    "dyson sphere",
-    "ecg",
-    "emotional",
-    "entanglement",
-    "fear",
-    "fuzzy sets",
-    "fidgeting",
-    "glucose",
-    "garbage",
-    "gonad",
-    "hands",
-    "heart",
-    "higgs boson",
-    "hydron",
-    "identity",
-    "industrial",
-    "isolation",
-    "laptop",
-    "love",
-    "laboratory",
-    "machine learning",
-    "mathematical theory of communication",
-    "mental state",
-    "micro",
-    "microchip",
-    "mobile",
-    "molecular cloning",
-    "neural network",
-    "negative",
-    "numbers",
-    "pc",
-    "planet",
-    "protein measurement",
-    "psychology",
-    "quantum",
-    "quasar",
-    "qubit",
-    "reading",
-    "relationship",
-    "relativity",
-    "robotics",
-    "rocket",
-    "sitting",
-    "spider",
-    "spiritual",
-    "sulphur",
-    "television",
-    "tiered reward",
-    "transport",
-    "virtual reality",
-    "volcano",
-    "vision",
-];
 
 // Function to search Arxiv API
 async function arxivAPICall(
