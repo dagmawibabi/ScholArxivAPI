@@ -27,7 +27,7 @@ app.get("/", (c) => {
     return c.text("Bookmark Route");
 });
 
-app.post("/myBookmarks", async (c) => {
+app.get("/myBookmarks", async (c) => {
     let session = await sessionManager(c);
     let userID = session?.user.id;
     console.log(userID);
