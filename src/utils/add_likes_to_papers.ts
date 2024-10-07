@@ -1,12 +1,9 @@
-import { auth } from "../lib/auth";
 import { db } from "../lib/db";
+import sessionManager from "./session_manager";
 
 async function addLikeValueToPapers(c: any, papers: any[]) {
-    const session = await auth.api.getSession({
-        headers: c.req.raw.headers,
-    });
-    console.log(session);
-    console.log(c.req.raw.headers);
+    let session = await sessionManager(c);
+    let userID = session?.user.id;
 
     let papersWithLike = [];
     for (var eachPaper of papers) {

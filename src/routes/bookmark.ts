@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { db } from "../lib/db";
+import sessionManager from "../utils/session_manager";
 
 const app = new Hono();
 
@@ -27,8 +28,9 @@ app.get("/", (c) => {
 });
 
 app.post("/myBookmarks", async (c) => {
-    let body = await c.req.json();
-    let userID = body["userID"].toString();
+    let session = await sessionManager(c);
+    let userID = session?.user.id;
+    console.log(userID);
 
     // Get all bookmarks
     let papers = await getBookmarkedPapers(userID);
@@ -37,9 +39,12 @@ app.post("/myBookmarks", async (c) => {
 });
 
 app.post("/paper", async (c) => {
+    let session = await sessionManager(c);
+    let userID = session?.user.id;
     let body = await c.req.json();
-    let userID = body["userID"].toString();
     let paperID = body["paperID"].toString();
+
+    console.log(userID);
 
     let newBookmark = {
         userID: userID,
