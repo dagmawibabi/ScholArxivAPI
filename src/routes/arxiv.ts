@@ -152,6 +152,12 @@ app.get("/search", async (c) => {
     await addPapersToDB(cleanedPapers);
     let papersWithLikes = await addLikeValueToPapers(c, cleanedPapers);
 
+    // let localSearch = await db
+    //     .collection("papers")
+    //     .find({ title: { $regex: `^${searchTerm}`, $options: "i" } })
+    //     .toArray();
+    // let papersWithLikes = await addLikeValueToPapers(c, localSearch);
+
     // Response
     return c.json(papersWithLikes);
 });
@@ -164,24 +170,24 @@ app.get("/discover", async (c) => {
         .toArray();
     let papersWithLikes = await addLikeValueToPapers(c, discoveredPapers);
 
+    // // Choose Random Paper Title
+    // let randomSearchTerm = suggestedPaperTitles[0];
+
+    // // Generate a random number between 0 and 5
+    // let randomStartIndex = "0"; //Math.floor(Math.random() * 6).toString();
+
+    // // Search and Clean Arxiv Papers
+    // let cleanedPapers = await searchAndCleanArxivPapers(
+    //     randomSearchTerm,
+    //     randomStartIndex,
+    //     defaultMaxResults
+    // );
+
+    // await addPapersToDB(cleanedPapers);
+    // let papersWithLikes = await addLikeValueToPapers(c, cleanedPapers);
+
     // Response
     return c.json(papersWithLikes);
 });
 
 export default app;
-
-// // Choose Random Paper Title
-// let randomSearchTerm =
-//     suggestedPaperTitles[
-//         Math.floor(Math.random() * suggestedPaperTitles.length)
-//     ];
-
-// // Generate a random number between 0 and 5
-// let randomStartIndex = Math.floor(Math.random() * 6).toString();
-
-// // Search and Clean Arxiv Papers
-// let cleanedPapers = await searchAndCleanArxivPapers(
-//     randomSearchTerm,
-//     randomStartIndex,
-//     defaultMaxResults
-// );

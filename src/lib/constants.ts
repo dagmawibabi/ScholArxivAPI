@@ -1,12 +1,12 @@
-export const baseURL = "https://export.arxiv.org/api/query?search_query=all:";
+export const baseURL = "https://export.arxiv.org/api/query?search_query=ti:";
 export const pdfBaseURL = "https://arxiv.org/pdf";
 export const defaultStartIndex = "0";
 export const defaultMaxResults = "30";
 
 export const suggestedPaperTitles: any[] = [
+    "attention is all you need",
     "acid",
     "a theory of justice",
-    "attention is all you need",
     "augmented",
     "behavioral",
     "books",

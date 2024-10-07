@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { db } from "../lib/db";
 import addLikeValueToPapers from "../utils/add_likes_to_papers";
+import sessionManager from "../utils/session_manager";
 
 const app = new Hono();
 
@@ -12,8 +13,9 @@ const app = new Hono();
 
 // Like a paper
 app.post("/paper", async (c) => {
+    let session = await sessionManager(c);
+    let userID = session?.user.id;
     let body = await c.req.json();
-    let userID = body["userID"].toString();
     let paperID = body["paperID"].toString();
 
     let newLike = {

@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { db } from "../lib/db";
 import sessionManager from "../utils/session_manager";
+import addLikeValueToPapers from "../utils/add_likes_to_papers";
 
 const app = new Hono();
 
@@ -32,9 +33,10 @@ app.get("/myBookmarks", async (c) => {
     let userID = session?.user.id;
 
     // Get all bookmarks
-    let papers = await getBookmarkedPapers(userID);
+    let rawBookmarks = await getBookmarkedPapers(userID);
+    let bookmarkedPapers = await addLikeValueToPapers(c, rawBookmarks);
 
-    return c.json(papers);
+    return c.json(bookmarkedPapers);
 });
 
 app.post("/paper", async (c) => {
