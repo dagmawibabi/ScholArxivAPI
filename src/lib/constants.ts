@@ -1,7 +1,7 @@
 export const baseURL = "https://export.arxiv.org/api/query?search_query=all:";
 export const pdfBaseURL = "https://arxiv.org/pdf";
 export const defaultStartIndex = "0";
-export const defaultMaxResults = "50";
+export const defaultMaxResults = "30";
 
 export const suggestedPaperTitles: any[] = [
     "acid",

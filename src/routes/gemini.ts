@@ -19,7 +19,7 @@ app.get("/", async (c) => {
 app.post("/ask", async (c) => {
     let body = await c.req.json();
     let prompt = body["prompt"].toString();
-    console.log(prompt);
+    // console.log(prompt);
 
     const result = await model.generateContent(prompt);
 

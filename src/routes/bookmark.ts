@@ -1,0 +1,69 @@
+import { Hono } from "hono";
+import { db } from "../lib/db";
+
+const app = new Hono();
+
+async function getBookmarkedPapers(userID: string) {
+    // Get User Bookmarks
+    let result = await db
+        .collection("bookmarks")
+        .find({ userID: userID })
+        .toArray();
+
+    // Extract paperIDs from the bookmarks
+    let paperIDs = result.map((bookmark) => bookmark.paperID);
+
+    // Fetch papers using the extracted paperIDs
+    let papers = await db
+        .collection("papers")
+        .find({ id: { $in: paperIDs } })
+        .toArray();
+
+    return papers;
+}
+
+app.get("/", (c) => {
+    return c.text("Bookmark Route");
+});
+
+app.post("/myBookmarks", async (c) => {
+    let body = await c.req.json();
+    let userID = body["userID"].toString();
+
+    // Get all bookmarks
+    let papers = await getBookmarkedPapers(userID);
+
+    return c.json(papers);
+});
+
+app.post("/paper", async (c) => {
+    let body = await c.req.json();
+    let userID = body["userID"].toString();
+    let paperID = body["paperID"].toString();
+
+    let newBookmark = {
+        userID: userID,
+        paperID: paperID,
+        createdAt: new Date().toISOString(),
+    };
+
+    // Add new bookmark
+    let existingBookmark = await db
+        .collection("bookmarks")
+        .findOne({ userID: userID, paperID: paperID });
+    if (existingBookmark) {
+        // Delete the existing bookmark
+        await db
+            .collection("bookmarks")
+            .deleteOne({ userID: userID, paperID: paperID });
+    } else {
+        await db.collection("bookmarks").insertOne(newBookmark);
+    }
+
+    // Send back all bookmarks
+    let papers = await getBookmarkedPapers(userID);
+
+    return c.json(papers);
+});
+
+export default app;

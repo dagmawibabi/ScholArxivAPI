@@ -8,6 +8,8 @@ import {
     defaultMaxResults,
     suggestedPaperTitles,
 } from "../lib/constants";
+import { db } from "../lib/db";
+import addLikeValueToPapers from "../utils/add_likes_to_papers";
 
 const app = new Hono();
 
@@ -112,6 +114,26 @@ async function searchAndCleanArxivPapers(
     return cleanedPapers;
 }
 
+// Add to DB
+async function addPapersToDB(cleanedPapers: any[]) {
+    // Retrieve all existing papers from the database once
+    const existingPapers = await db.collection("papers").find({}).toArray();
+    const existingIds = new Set(existingPapers.map((paper) => paper.id));
+
+    // Collect new papers to insert
+    const papersToInsert = [];
+    for (const paper of cleanedPapers) {
+        if (!existingIds.has(paper.id)) {
+            papersToInsert.push(paper);
+        }
+    }
+
+    // Insert all new papers at once
+    if (papersToInsert.length > 0) {
+        await db.collection("papers").insertMany(papersToInsert);
+    }
+}
+
 // Search Papers
 app.get("/search", async (c) => {
     // Parse Parameters
@@ -126,30 +148,40 @@ app.get("/search", async (c) => {
         maxResults
     );
 
+    // Add papers to DB
+    await addPapersToDB(cleanedPapers);
+    let papersWithLikes = await addLikeValueToPapers(c, cleanedPapers);
+
     // Response
-    return c.json(cleanedPapers);
+    return c.json(papersWithLikes);
 });
 
 // Discover Papers
 app.get("/discover", async (c) => {
-    // Choose Random Paper Title
-    let randomSearchTerm =
-        suggestedPaperTitles[
-            Math.floor(Math.random() * suggestedPaperTitles.length)
-        ];
-
-    // Generate a random number between 0 and 5
-    let randomStartIndex = Math.floor(Math.random() * 6).toString();
-
-    // Search and Clean Arxiv Papers
-    let cleanedPapers = await searchAndCleanArxivPapers(
-        randomSearchTerm,
-        randomStartIndex,
-        defaultMaxResults
-    );
+    let discoveredPapers = await db
+        .collection("papers")
+        .aggregate([{ $sample: { size: parseInt(defaultMaxResults) } }])
+        .toArray();
+    let papersWithLikes = await addLikeValueToPapers(c, discoveredPapers);
 
     // Response
-    return c.json(cleanedPapers);
+    return c.json(papersWithLikes);
 });
 
 export default app;
+
+// // Choose Random Paper Title
+// let randomSearchTerm =
+//     suggestedPaperTitles[
+//         Math.floor(Math.random() * suggestedPaperTitles.length)
+//     ];
+
+// // Generate a random number between 0 and 5
+// let randomStartIndex = Math.floor(Math.random() * 6).toString();
+
+// // Search and Clean Arxiv Papers
+// let cleanedPapers = await searchAndCleanArxivPapers(
+//     randomSearchTerm,
+//     randomStartIndex,
+//     defaultMaxResults
+// );
