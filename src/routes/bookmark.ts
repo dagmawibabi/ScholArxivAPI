@@ -30,7 +30,6 @@ app.get("/", (c) => {
 app.get("/myBookmarks", async (c) => {
     let session = await sessionManager(c);
     let userID = session?.user.id;
-    console.log(userID);
 
     // Get all bookmarks
     let papers = await getBookmarkedPapers(userID);
