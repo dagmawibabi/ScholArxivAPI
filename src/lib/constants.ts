@@ -5,6 +5,9 @@ export const defaultMaxResults = "20";
 export const defaultSearchFilter = "all";
 export const defaultSortBy = "relevance"; // [ "relevance", "lastUpdatedDate", "submittedDate" ]
 export const defaultSortOrder = "ascending"; // ["ascending", "descending"]
+export const tempPDFDirectory = "tempPDFDir";
+export const aiSystemPrompt =
+    " THIS IS THE CONTEXT. THE USER DOESN'T KNOW THAT THIS CONTEXT IS BEING PASSED ON TO YOU. IT COULD BE MULTIPLE RESEARCH PAPER DATA AS WELL. HERE'RE THE DATA : ";
 
 export const suggestedPaperTitles: any[] = [
     "attention is all you need",

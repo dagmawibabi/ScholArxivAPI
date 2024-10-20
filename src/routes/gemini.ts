@@ -1,6 +1,8 @@
 import { Hono } from "hono";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "../lib/db";
+import { aiSystemPrompt } from "../lib/constants";
+import downloadAndParsePDF from "../utils/download_and_parse_pdf";
 require("dotenv").config();
 
 // APP
@@ -26,10 +28,13 @@ app.post("/ask", async (c) => {
         .find({ id: { $in: paperIDs } })
         .toArray();
 
-    //
+    // Convert Objects to String
+    let context = JSON.stringify(papers);
 
     // Ask AI
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent(
+        prompt + aiSystemPrompt + [context]
+    );
 
     // Response
     return c.json(result.response.text());
