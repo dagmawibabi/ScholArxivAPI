@@ -1,190 +1,115 @@
 import { Hono } from "hono";
-import axios from "axios";
-import { XMLParser } from "fast-xml-parser";
 import {
-    baseURL,
-    pdfBaseURL,
     defaultStartIndex,
     defaultMaxResults,
+    defaultSearchFilter,
     suggestedPaperTitles,
+    defaultSortBy,
+    defaultSortOrder,
 } from "../lib/constants";
+import addDynamicValuesToPapers from "../utils/add_dynamic_values_to_papers";
 import { db } from "../lib/db";
-import addLikeValueToPapers from "../utils/add_likes_to_papers";
+import paperSearch from "../utils/arxiv_functions";
+import { searchStringOBJI } from "../types/types";
 
 const app = new Hono();
 
-// Function to search Arxiv API
-async function arxivAPICall(
-    searchTerm: string,
-    startIndex: string,
-    maxResults: string
-) {
-    let responseXML = await axios.get(
-        `${baseURL}${searchTerm}&start=${startIndex}&max_results=${maxResults}`
-    );
-    return responseXML.data;
-}
-
-// Function to Identify PDF link
-function parsePDFLinkFromPaperID(paperID: string) {
-    const extractedId = paperID.split("/").pop();
-    let pdfURL = "";
-    if (extractedId && extractedId.includes(".")) {
-        pdfURL = `${pdfBaseURL}/${extractedId}`;
-    } else {
-        pdfURL = `${pdfBaseURL}/cond-mat/${extractedId}`;
-    }
-    return pdfURL;
-}
-
-// Funtion to clear the response
-async function cleanPapers(rawPapers: any) {
-    let cleanedPapers = [];
-    for (var eachPaper of rawPapers) {
-        let curPaper = {
-            id: eachPaper["id"],
-            updated: eachPaper["updated"],
-            published: eachPaper["published"],
-            title: eachPaper["title"],
-            summary: eachPaper["summary"],
-            authors: eachPaper["author"],
-            doi: eachPaper["arxiv:doi"] || "",
-            journal_ref: eachPaper["arxiv:journal_ref"] || "",
-            primary_category: eachPaper["arxiv:primary_category"] || "",
-            category: eachPaper["arxiv:category"] || "",
-            comment: eachPaper["arxiv:comment"] || "",
-
-            pdfLink: parsePDFLinkFromPaperID(eachPaper["id"]),
-        };
-
-        // Clean Title
-        const cleanedTitle = removeNewLineCharacter(curPaper["title"]);
-
-        // Clean Summary
-        const cleanedSummary = removeNewLineCharacter(curPaper["summary"]);
-
-        // Format Authors
-        let authorList = [];
-        try {
-            for (var eachAuthor of curPaper["authors"]) {
-                authorList.push(eachAuthor["name"]);
-            }
-        } catch (e) {
-            authorList.push(eachPaper["author"]["name"]);
-        }
-
-        // Add to response
-        curPaper["title"] = cleanedTitle;
-        curPaper["summary"] = cleanedSummary;
-        curPaper["authors"] = authorList;
-        cleanedPapers.push(curPaper);
-    }
-    return cleanedPapers;
-}
-
-// Function to parse XLM to JS object
-function parseXMLToJS(data: string) {
-    let parser = new XMLParser();
-    let jsObj = parser.parse(data);
-    return jsObj;
-}
-
-// Function to remove /n from texts
-function removeNewLineCharacter(text: string) {
-    const cleanedText = text.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
-    return cleanedText;
-}
-
-// Function to search arxiv
-async function searchAndCleanArxivPapers(
-    searchTerm: string,
-    startIndex: string,
-    maxResults: string
-) {
-    // Arxiv Response
-    let responseXML = await arxivAPICall(searchTerm, startIndex, maxResults);
-
-    // Parse XML
-    let jsObj = parseXMLToJS(responseXML);
-
-    // Custom Object
-    let rawPapers = jsObj["feed"]["entry"] || [];
-    let cleanedPapers = await cleanPapers(rawPapers);
-
-    return cleanedPapers;
-}
-
-// Add to DB
-async function addPapersToDB(cleanedPapers: any[]) {
-    // Retrieve all existing papers from the database once
-    const existingPapers = await db.collection("papers").find({}).toArray();
-    const existingIds = new Set(existingPapers.map((paper) => paper.id));
-
-    // Collect new papers to insert
-    const papersToInsert = [];
-    for (const paper of cleanedPapers) {
-        if (!existingIds.has(paper.id)) {
-            papersToInsert.push(paper);
-        }
-    }
-
-    // Insert all new papers at once
-    if (papersToInsert.length > 0) {
-        await db.collection("papers").insertMany(papersToInsert);
-    }
-}
+// Introduction
+app.get("/", (c) => {
+    return c.text("Search and Discover Route");
+});
 
 // Search Papers
-app.get("/search", async (c) => {
+app.post("/search", async (c) => {
+    let body = await c.req.json();
+
     // Parse Parameters
-    let searchTerm = c.req.query("searchTerm") || "";
-    let startIndex = c.req.query("startIndex") || defaultStartIndex;
-    let maxResults = c.req.query("maxResults") || defaultMaxResults;
+    let startIndex = body["startIndex"] || defaultStartIndex;
+    let maxResults = body["maxResults"] || defaultMaxResults;
+    let searchFilterOBJ = body["searchFilter"] || defaultSearchFilter;
+    let sortBy = body["sortBy"] || defaultSortBy;
+    let sortOrder = body["sortOrder"] || defaultSortOrder;
 
     // Search and Clean Arxiv Papers
-    let cleanedPapers = await searchAndCleanArxivPapers(
-        searchTerm,
+    let cleanedPapers = await paperSearch(
         startIndex,
-        maxResults
+        maxResults,
+        searchFilterOBJ,
+        sortBy,
+        sortOrder
     );
 
-    // Add papers to DB
-    await addPapersToDB(cleanedPapers);
-    let papersWithLikes = await addLikeValueToPapers(c, cleanedPapers);
+    // Add comment and like values
+    let papersWithLikes = await addDynamicValuesToPapers(c, cleanedPapers);
 
     // let localSearch = await db
     //     .collection("papers")
     //     .find({ title: { $regex: `^${searchTerm}`, $options: "i" } })
     //     .toArray();
-    // let papersWithLikes = await addLikeValueToPapers(c, localSearch);
+    // let papersWithLikes = await addDynamicValuesToPapers(c, localSearch);
 
     // Response
     return c.json(papersWithLikes);
 });
 
 // Discover Papers
-app.get("/discover", async (c) => {
+app.get("/discoverArxiv", async (c) => {
+    // Choose Random Paper Title
+    let randomSearchTerm = suggestedPaperTitles[0];
+
+    // Generate a random number between 0 and 5
+    let randomStartIndex = Math.floor(Math.random() * 6).toString();
+
+    let searchFilterOBJ: searchStringOBJI = {
+        all: randomSearchTerm,
+    };
+
+    // Search and Clean Arxiv Papers
+    let cleanedPapers = await paperSearch(
+        randomStartIndex,
+        defaultMaxResults,
+        searchFilterOBJ
+    );
+
+    // Add comment and like values
+    let papersWithLikes = await addDynamicValuesToPapers(c, cleanedPapers);
+
+    // Response
+    return c.json(papersWithLikes);
+});
+
+// Discover Papers from DB
+//! This's very slow because it makes two calls to the DB
+//! and the skip function takes time skipping over papers
+app.get("/discoverLocal", async (c) => {
+    // Get total number of documents and pick a random starting point
+    let totalDocs = await db.collection("papers").countDocuments();
+    let randomSkip = Math.floor(Math.random() * totalDocs);
+
+    let discoveredPapers = await db
+        .collection("papers")
+        .find({})
+        .sort({ createdAt: -1 })
+        .skip(randomSkip)
+        .limit(parseInt(defaultMaxResults))
+        .toArray();
+
+    // Add comment and like values
+    let papersWithLikes = await addDynamicValuesToPapers(c, discoveredPapers);
+
+    // Response
+    return c.json(papersWithLikes);
+});
+
+// Discover Mixed Topic
+app.get("/discoverLocalMixedTopics", async (c) => {
     let discoveredPapers = await db
         .collection("papers")
         .aggregate([{ $sample: { size: parseInt(defaultMaxResults) } }])
         .toArray();
-    let papersWithLikes = await addLikeValueToPapers(c, discoveredPapers);
 
-    // // Choose Random Paper Title
-    // let randomSearchTerm = suggestedPaperTitles[0];
-
-    // // Generate a random number between 0 and 5
-    // let randomStartIndex = "0"; //Math.floor(Math.random() * 6).toString();
-
-    // // Search and Clean Arxiv Papers
-    // let cleanedPapers = await searchAndCleanArxivPapers(
-    //     randomSearchTerm,
-    //     randomStartIndex,
-    //     defaultMaxResults
-    // );
-
-    // await addPapersToDB(cleanedPapers);
-    // let papersWithLikes = await addLikeValueToPapers(c, cleanedPapers);
+    // Add comment and like values
+    let papersWithLikes = await addDynamicValuesToPapers(c, discoveredPapers);
 
     // Response
     return c.json(papersWithLikes);

@@ -1,7 +1,7 @@
 import { db } from "../lib/db";
 import sessionManager from "./session_manager";
 
-async function addLikeValueToPapers(c: any, papers: any[]) {
+async function addDynamicValuesToPapers(c: any, papers: any[]) {
     let session = await sessionManager(c);
     let userID = session?.user.id;
 
@@ -38,7 +38,8 @@ async function addLikeValueToPapers(c: any, papers: any[]) {
         eachPaper["isBookmarked"] = isBookmarked;
         papersWithLikeCount.push(eachPaper);
     }
+    papersWithLikeCount.reverse();
     return papersWithLikeCount;
 }
 
-export default addLikeValueToPapers;
+export default addDynamicValuesToPapers;

@@ -1,7 +1,6 @@
 import { Hono } from "hono";
-import axios from "axios";
-import {} from "../lib/constants";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { db } from "../lib/db";
 require("dotenv").config();
 
 // APP
@@ -19,8 +18,17 @@ app.get("/", async (c) => {
 app.post("/ask", async (c) => {
     let body = await c.req.json();
     let prompt = body["prompt"].toString();
-    // console.log(prompt);
+    let paperIDs = body["paperIDs"];
 
+    // Get Paper Info
+    let papers = await db
+        .collection("papers")
+        .find({ id: { $in: paperIDs } })
+        .toArray();
+
+    //
+
+    // Ask AI
     const result = await model.generateContent(prompt);
 
     // Response

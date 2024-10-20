@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { db } from "../lib/db";
 import sessionManager from "../utils/session_manager";
-import addLikeValueToPapers from "../utils/add_likes_to_papers";
+import addDynamicValuesToPapers from "../utils/add_dynamic_values_to_papers";
 
 const app = new Hono();
 
-async function getBookmarkedPapers(userID: string) {
+async function getBookmarkedPapers(c: any, userID: string) {
     // Get User Bookmarks
     let result = await db
         .collection("bookmarks")
@@ -16,14 +16,18 @@ async function getBookmarkedPapers(userID: string) {
     let paperIDs = result.map((bookmark) => bookmark.paperID);
 
     // Fetch papers using the extracted paperIDs
-    let papers = await db
+    let rawBookmarks = await db
         .collection("papers")
         .find({ id: { $in: paperIDs } })
         .toArray();
 
-    return papers;
+    // Add dynamic values
+    let bookmarkedPapers = await addDynamicValuesToPapers(c, rawBookmarks);
+
+    return bookmarkedPapers;
 }
 
+// Introduction
 app.get("/", (c) => {
     return c.text("Bookmark Route");
 });
@@ -33,9 +37,9 @@ app.get("/myBookmarks", async (c) => {
     let userID = session?.user.id;
 
     // Get all bookmarks
-    let rawBookmarks = await getBookmarkedPapers(userID);
-    let bookmarkedPapers = await addLikeValueToPapers(c, rawBookmarks);
+    let bookmarkedPapers = await getBookmarkedPapers(c, userID);
 
+    // Response
     return c.json(bookmarkedPapers);
 });
 
@@ -45,8 +49,7 @@ app.post("/paper", async (c) => {
     let body = await c.req.json();
     let paperID = body["paperID"].toString();
 
-    console.log(userID);
-
+    // New bookmark obj
     let newBookmark = {
         userID: userID,
         paperID: paperID,
@@ -67,9 +70,10 @@ app.post("/paper", async (c) => {
     }
 
     // Send back all bookmarks
-    let papers = await getBookmarkedPapers(userID);
+    let bookmarkedPapers = await getBookmarkedPapers(c, userID);
 
-    return c.json(papers);
+    // Response
+    return c.json(bookmarkedPapers);
 });
 
 export default app;

@@ -1,11 +1,13 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { auth } from "./lib/auth";
 import arxiv from "./routes/arxiv";
 import gemini from "./routes/gemini";
 import bookmark from "./routes/bookmark";
 import like from "./routes/like";
-import { auth } from "./lib/auth";
+import comment from "./routes/comment";
+
 require("dotenv").config();
 
 // App
@@ -34,6 +36,7 @@ app.route("/arxiv", arxiv);
 app.route("/gemini", gemini);
 app.route("/bookmark", bookmark);
 app.route("/like", like);
+app.route("/comment", comment);
 
 //Auth
 app.on(["POST", "GET"], "/api/auth/**", async (c) => {

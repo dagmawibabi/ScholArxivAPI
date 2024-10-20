@@ -1,20 +1,19 @@
 import { Hono } from "hono";
 import { db } from "../lib/db";
-import addLikeValueToPapers from "../utils/add_likes_to_papers";
+import addLikeValueToPapers from "../utils/add_dynamic_values_to_papers";
 import sessionManager from "../utils/session_manager";
 
 const app = new Hono();
 
-// app.get("/", async (c) => {
-//     let papers = await db.collection("papers").find().limit(5).toArray();
-//     let result = await addLikeValueToPapers(papers);
-//     return c.json(result);
-// });
+// Introduction
+app.get("/", (c) => {
+    return c.text("Like Route");
+});
 
 // Like a paper
 app.post("/paper", async (c) => {
     let session = await sessionManager(c);
-    let userID = session?.user.id;
+    let userID = session?.user.id || "RBT7LHOcFwDAWw9okEiQteR9HWbRteL6";
     let body = await c.req.json();
     let paperID = body["paperID"].toString();
 
@@ -24,10 +23,12 @@ app.post("/paper", async (c) => {
         createdAt: new Date().toISOString(),
     };
 
-    // Add new like
+    // Check if it's been liked before
     let existingLike = await db
         .collection("likes")
         .findOne({ userID: userID, paperID: paperID });
+
+    // Add or remove like
     if (existingLike) {
         // Delete the existing like
         await db
@@ -37,10 +38,11 @@ app.post("/paper", async (c) => {
         await db.collection("likes").insertOne(newLike);
     }
 
-    // Send back all likes
-    // let papers = await addLikeValueToPapers(c, newLike);
+    // Send back updated paper
+    let likedPaper = [await db.collection("papers").findOne({ id: paperID })];
+    let updatedPaper = await addLikeValueToPapers(c, likedPaper);
 
-    return c.json({});
+    return c.json(updatedPaper);
 });
 
 export default app;

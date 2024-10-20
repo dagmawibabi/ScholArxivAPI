@@ -1,7 +1,10 @@
-export const baseURL = "https://export.arxiv.org/api/query?search_query=ti:";
+export const baseURL = "https://export.arxiv.org/api/query?search_query=";
 export const pdfBaseURL = "https://arxiv.org/pdf";
 export const defaultStartIndex = "0";
-export const defaultMaxResults = "30";
+export const defaultMaxResults = "20";
+export const defaultSearchFilter = "all";
+export const defaultSortBy = "relevance"; // [ "relevance", "lastUpdatedDate", "submittedDate" ]
+export const defaultSortOrder = "ascending"; // ["ascending", "descending"]
 
 export const suggestedPaperTitles: any[] = [
     "attention is all you need",
