@@ -14,7 +14,7 @@ RUN npm install --only=production
 COPY . .
 
 # Expose the port the app runson
-EXPOSE 3000
+EXPOSE 6400
 
 # Define the command to run the app
 CMD ["npm", "run", "dev"]
