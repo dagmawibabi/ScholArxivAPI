@@ -13,7 +13,7 @@ RUN npm install --only=production
 # Copy the rest of the application code to the container
 COPY . .
 
-# Expose the port the app runs on
+# Expose the port the app runson
 EXPOSE 3000
 
 # Define the command to run the app
