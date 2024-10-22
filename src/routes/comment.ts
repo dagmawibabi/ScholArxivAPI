@@ -11,7 +11,7 @@ app.get("/", async (c) => {
 
 app.post("/paper", async (c) => {
     let session = await sessionManager(c);
-    let userID = session?.user.id || "RBT7LHOcFwDAWw9okEiQteR9HWbRteL6";
+    let userID = session?.user.id;
     let body = await c.req.json();
     let paperID = body["paperID"].toString();
     let parentID = body["parentID"] || null;
