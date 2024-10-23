@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import { db } from "../lib/db";
 import sessionManager from "../utils/session_manager";
 import { ObjectId } from "mongodb";
+import addDynamicValuesToPapers from "../utils/add_dynamic_values_to_papers";
+import addDynamicValuesToComments from "../utils/add_dynamic_values_to_comments";
 
 const app = new Hono();
 
@@ -11,7 +13,7 @@ app.get("/", async (c) => {
 
 app.post("/paper", async (c) => {
     let session = await sessionManager(c);
-    let userID = session?.user.id;
+    let userID = session?.user.id || "RBT7LHOcFwDAWw9okEiQteR9HWbRteL6";
     let body = await c.req.json();
     let paperID = body["paperID"].toString();
     let parentID = body["parentID"] || null;
@@ -20,6 +22,7 @@ app.post("/paper", async (c) => {
     let newComment = {
         userID: userID,
         paperID: paperID,
+        extractedID: paperID.split("/").pop(),
         parentID: parentID,
         comment: comment,
         editable: true,
@@ -40,16 +43,32 @@ app.post("/paper", async (c) => {
 
 app.post("/getPaperComments", async (c) => {
     let body = await c.req.json();
-    let paperID = body["paperID"].toString();
+    let extractedID = body["extractedID"].toString();
+
+    // Get Paper
+    let paper = await db
+        .collection("papers")
+        .findOne({ extractedID: extractedID, parentID: null });
+
+    // Add comment and like values
+    let papersWithLikes = await addDynamicValuesToPapers(c, [paper]);
 
     // Get root comments
     let comments = await db
         .collection("comments")
-        .find({ paperID: paperID, parentID: null })
+        .find({ extractedID: extractedID, parentID: null })
         .toArray();
 
+    // Add who commented to comments
+    let commentsWithName = await addDynamicValuesToComments(c, comments);
+
+    let responseOBJ = {
+        paper: papersWithLikes[0],
+        comments: commentsWithName,
+    };
+
     // Response
-    return c.json(comments);
+    return c.json(responseOBJ);
 });
 
 app.post("/getTrailingComments", async (c) => {
@@ -62,8 +81,11 @@ app.post("/getTrailingComments", async (c) => {
         .find({ parentID: commentID })
         .toArray();
 
+    // Add who commented to comments
+    let commentsWithName = await addDynamicValuesToComments(c, comments);
+
     // Response
-    return c.json(comments);
+    return c.json(commentsWithName);
 });
 
 app.patch("/editComment", async (c) => {
