@@ -29,7 +29,6 @@ app.post("/paper", async (c) => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
     };
-    console.log(newComment);
 
     await db.collection("comments").insertOne(newComment);
     let commentObj = await db.collection("comments").findOne(newComment);

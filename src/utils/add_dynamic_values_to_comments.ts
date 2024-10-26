@@ -21,7 +21,6 @@ async function addDynamicValuesToComments(c: any, comments: any[]) {
         let trailingCommentCount = await db
             .collection("comments")
             .countDocuments({ parentID: eachComment["_id"].toString() });
-        console.log(trailingCommentCount);
         eachComment.trailingCommentCount = trailingCommentCount;
     }
 

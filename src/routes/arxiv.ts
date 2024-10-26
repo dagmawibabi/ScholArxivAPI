@@ -38,6 +38,7 @@ app.post("/search", async (c) => {
         sortBy,
         sortOrder
     );
+    console.log(searchFilterOBJ);
 
     // Add comment and like values
     let papersWithLikes = await addDynamicValuesToPapers(c, cleanedPapers);
@@ -47,6 +48,8 @@ app.post("/search", async (c) => {
     //     .find({ title: { $regex: `^${searchTerm}`, $options: "i" } })
     //     .toArray();
     // let papersWithLikes = await addDynamicValuesToPapers(c, localSearch);
+    console.log("done");
+    console.log(papersWithLikes.length);
 
     // Response
     return c.json(papersWithLikes);
