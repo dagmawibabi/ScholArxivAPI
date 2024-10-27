@@ -21,6 +21,7 @@ app.use(
             "http://localhost:5173",
             "https://schol-arxiv-web.vercel.app",
             "https://www.ScholArxiv.com",
+            "https://saw-5.vercel.app",
         ],
         credentials: true,
     })
@@ -32,11 +33,11 @@ app.get("/", (c) => {
 });
 
 // Routes
-app.route("/arxiv", arxiv);
-app.route("/gemini", gemini);
-app.route("/bookmark", bookmark);
-app.route("/like", like);
-app.route("/comment", comment);
+app.route("/api/arxiv", arxiv);
+app.route("/api/gemini", gemini);
+app.route("/api/bookmark", bookmark);
+app.route("/api/like", like);
+app.route("/api/comment", comment);
 
 //Auth
 app.on(["POST", "GET"], "/api/auth/**", async (c) => {
