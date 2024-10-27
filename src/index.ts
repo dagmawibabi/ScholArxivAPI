@@ -40,7 +40,7 @@ app.route("/api/like", like);
 app.route("/api/comment", comment);
 
 //Auth
-app.on(["POST", "GET"], "/api/auth/**", async (c) => {
+app.on(["POST", "GET"], "/auth/**", async (c) => {
     return auth.handler(c.req.raw);
 });
 
