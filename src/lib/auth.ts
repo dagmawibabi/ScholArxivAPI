@@ -3,25 +3,26 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { db } from "./db";
 
 export const auth = betterAuth({
-    database: mongodbAdapter(db),
-    emailAndPassword: {
-        enabled: true,
-        async sendResetPassword(url, user) {
-            console.log(`Send reset password email to ${user.email}`);
-            console.log(`Reset password url: ${url}`);
-        },
+  database: mongodbAdapter(db),
+  emailAndPassword: {
+    enabled: true,
+    async sendResetPassword(user, url) {
+      console.log(`Send reset password email to ${user.email}`);
+      console.log(`Reset password url: ${url}`);
     },
-    //! Uncomment when you need social logins
-    // socialProviders: {
-    //   github: {
-    //     enabled: true,
-    //     clientId: process.env.GITHUB_CLIENT_ID!,
-    //     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    //   },
-    //   google: {
-    //     enabled: true,
-    //     clientId: process.env.GOOGLE_CLIENT_ID!,
-    //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    //   },
-    // },
+  },
+  trustedOrigins: ["http://localhost:5173"],
+  //! Uncomment when you need social logins
+  // socialProviders: {
+  //   github: {
+  //     enabled: true,
+  //     clientId: process.env.GITHUB_CLIENT_ID!,
+  //     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+  //   },
+  //   google: {
+  //     enabled: true,
+  //     clientId: process.env.GOOGLE_CLIENT_ID!,
+  //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  //   },
+  // },
 });
