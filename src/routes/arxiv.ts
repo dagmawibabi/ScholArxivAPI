@@ -24,8 +24,8 @@ app.post("/search", async (c) => {
     let body = await c.req.json();
 
     // Parse Parameters
-    let startIndex = body["startIndex"] || defaultStartIndex;
-    let maxResults = body["maxResults"] || defaultMaxResults;
+    let startIndex = body["startIndex"].toString() || defaultStartIndex;
+    let maxResults = body["maxResults"].toString() || defaultMaxResults;
     let searchFilterOBJ = body["searchFilter"] || defaultSearchFilter;
     let sortBy = body["sortBy"] || defaultSortBy;
     let sortOrder = body["sortOrder"] || defaultSortOrder;
@@ -38,7 +38,14 @@ app.post("/search", async (c) => {
         sortBy,
         sortOrder
     );
-    console.log(searchFilterOBJ);
+    // let abc = {
+    //     startIndex,
+    //     maxResults,
+    //     searchFilterOBJ,
+    //     sortBy,
+    //     sortOrder,
+    // };
+    // console.log(abc);
 
     // Add comment and like values
     let papersWithLikes = await addDynamicValuesToPapers(c, cleanedPapers);
