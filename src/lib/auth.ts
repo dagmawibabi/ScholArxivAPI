@@ -13,12 +13,15 @@ export const auth = betterAuth({
         },
     },
     trustedOrigins: [
-        "http://localhost:5173/auth/sign_in",
         "http://localhost:5173",
         "http://localhost:5173/api",
-        "https://schol-arxiv-web.vercel.app",
-        "https://www.ScholArxiv.com",
+        "http://localhost:5173/api/auth",
+        "https://dagmawi.dev",
+        "https://dagmawi.dev/api",
+        "https://dagmawi.dev/api/auth",
         "https://saw-5.vercel.app",
+        "https://www.ScholArxiv.com",
+        "https://schol-arxiv-web.vercel.app",
     ],
     //! Uncomment when you need social logins
     // socialProviders: {

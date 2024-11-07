@@ -20,12 +20,14 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
+            "http://localhost:5173/api",
             "http://localhost:5173/api/auth",
-            "https://schol-arxiv-web.vercel.app",
-            "https://www.ScholArxiv.com",
-            "https://saw-5.vercel.app",
             "https://dagmawi.dev",
+            "https://dagmawi.dev/api",
             "https://dagmawi.dev/api/auth",
+            "https://saw-5.vercel.app",
+            "https://www.ScholArxiv.com",
+            "https://schol-arxiv-web.vercel.app",
         ],
         allowHeaders: ["Content-Type", "Authorization"],
         allowMethods: ["POST", "GET", "OPTIONS"],
