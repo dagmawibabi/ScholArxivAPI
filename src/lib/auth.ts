@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { db } from "./db";
-import { multiSession } from "better-auth/plugins";
 
 export const auth = betterAuth({
     database: mongodbAdapter(db),
