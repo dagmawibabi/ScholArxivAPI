@@ -36,11 +36,7 @@ export const auth = betterAuth({
     //   },
     // },
     advanced: {
-        disableCSRFCheck: true,
-        // defaultCookieAttributes: {
-        //     sameSite: "none",
-        //     secure: true,
-        // },
+        crossSubDomainCookies: { enabled: true },
     },
     // plugins: [multiSession()],
 });
