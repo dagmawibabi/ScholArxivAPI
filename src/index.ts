@@ -3,10 +3,11 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { auth } from "./lib/auth";
 import arxiv from "./routes/arxiv";
-import gemini from "./routes/gemini";
+import gemini from "./routes/ai";
 import bookmark from "./routes/bookmark";
 import like from "./routes/like";
 import comment from "./routes/comment";
+import { csrf } from "hono/csrf";
 
 require("dotenv").config();
 
@@ -15,17 +16,35 @@ const app = new Hono();
 
 // Simple CORS Middleware
 app.use(
-    "/api/*",
+    "*",
     cors({
         origin: [
             "http://localhost:5173",
+            "http://localhost:5173/api/auth",
             "https://schol-arxiv-web.vercel.app",
             "https://www.ScholArxiv.com",
             "https://saw-5.vercel.app",
+            "https://dagmawi.dev",
+            "https://dagmawi.dev/api/auth",
         ],
+        allowHeaders: ["Content-Type", "Authorization"],
+        allowMethods: ["POST", "GET", "OPTIONS"],
+        exposeHeaders: ["Content-Length"],
+        maxAge: 600,
         credentials: true,
     })
 );
+
+// app.use(
+//     csrf({
+//         origin: [
+//             "http://localhost:5173",
+//             "https://schol-arxiv-web.vercel.app",
+//             "https://www.ScholArxiv.com",
+//             "https://saw-5.vercel.app",
+//         ],
+//     })
+// );
 
 // Intro
 app.get("/", (c) => {
@@ -34,7 +53,7 @@ app.get("/", (c) => {
 
 // Routes
 app.route("/api/arxiv", arxiv);
-app.route("/api/gemini", gemini);
+app.route("/api/ai", gemini);
 app.route("/api/bookmark", bookmark);
 app.route("/api/like", like);
 app.route("/api/comment", comment);
