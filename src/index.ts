@@ -18,10 +18,18 @@ const app = new Hono();
 // Simple CORS Middleware
 app.use(
     cors({
-        origin: "*",
+        origin: [
+            "http://localhost:5173",
+            "http://localhost:5173/api",
+            "http://localhost:5173/api/auth",
+            "https://saw-5.vercel.app",
+            "https://www.scholarxiv.com",
+            "https://scholarxiv.com",
+        ],
         credentials: true,
-        methods: "GET,POST",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         optionsSuccessStatus: 200,
+        preflightContinue: true,
     })
 );
 // app.use(
