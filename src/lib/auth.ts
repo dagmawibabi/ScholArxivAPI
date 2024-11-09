@@ -20,6 +20,7 @@ export const auth = betterAuth({
         "https://dagmawi.dev/api/auth",
         "https://saw-5.vercel.app",
         "https://www.ScholArxiv.com",
+        "https://ScholArxiv.com",
         "https://schol-arxiv-web.vercel.app",
     ],
     //! Uncomment when you need social logins

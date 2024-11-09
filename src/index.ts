@@ -27,6 +27,7 @@ app.use(
             "https://dagmawi.dev/api/auth",
             "https://saw-5.vercel.app",
             "https://www.ScholArxiv.com",
+            "https://ScholArxiv.com",
             "https://schol-arxiv-web.vercel.app",
         ],
         allowHeaders: ["Content-Type", "Authorization"],
