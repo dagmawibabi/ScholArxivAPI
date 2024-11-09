@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
+// import { cors } from "hono/cors";
+var cors = require("cors");
 import { auth } from "./lib/auth";
 import arxiv from "./routes/arxiv";
 import gemini from "./routes/ai";
@@ -16,23 +17,31 @@ const app = new Hono();
 
 // Simple CORS Middleware
 app.use(
-    "*",
     cors({
-        origin: [
-            "http://localhost:5173",
-            "http://localhost:5173/api",
-            "http://localhost:5173/api/auth",
-            "https://saw-5.vercel.app",
-            "https://www.scholarxiv.com",
-            "https://scholarxiv.com",
-        ],
-        allowHeaders: ["Content-Type", "Authorization"],
-        allowMethods: ["POST", "GET", "OPTIONS"],
-        exposeHeaders: ["Content-Length"],
-        maxAge: 600,
+        origin: "*",
         credentials: true,
+        methods: "GET,POST",
+        optionsSuccessStatus: 200,
     })
 );
+// app.use(
+//     "*",
+//     cors({
+//         origin: [
+//             "http://localhost:5173",
+//             "http://localhost:5173/api",
+//             "http://localhost:5173/api/auth",
+//             "https://saw-5.vercel.app",
+//             "https://www.scholarxiv.com",
+//             "https://scholarxiv.com",
+//         ],
+//         allowHeaders: ["Content-Type", "Authorization"],
+//         allowMethods: ["POST", "GET", "OPTIONS"],
+//         exposeHeaders: ["Content-Length"],
+//         maxAge: 600,
+//         credentials: true,
+//     })
+// );
 
 // app.use(
 //     csrf({
