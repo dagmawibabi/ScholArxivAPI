@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-// import { cors } from "hono/cors";
-var cors = require("cors");
+import { cors } from "hono/cors";
+// var cors = require("cors");
 import { auth } from "./lib/auth";
 import arxiv from "./routes/arxiv";
 import gemini from "./routes/ai";
@@ -16,26 +16,6 @@ require("dotenv").config();
 const app = new Hono();
 
 // Simple CORS Middleware
-app.use(
-    cors({
-        origin: [
-            "http://localhost:5173",
-            "http://localhost:5173/api",
-            "http://localhost:5173/api/auth",
-            "https://saw-5.vercel.app",
-            "https://www.scholarxiv.com",
-            "https://scholarxiv.com",
-            "https://dagmawi.dev",
-            "https://dagmawi.dev/api",
-            "https://www.dagmawi.dev",
-            "https://www.dagmawi.dev/api",
-        ],
-        credentials: true,
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-        optionsSuccessStatus: 200,
-        preflightContinue: true,
-    })
-);
 // app.use(
 //     "*",
 //     cors({
@@ -46,14 +26,35 @@ app.use(
 //             "https://saw-5.vercel.app",
 //             "https://www.scholarxiv.com",
 //             "https://scholarxiv.com",
+//             "https://dagmawi.dev",
+//             "https://dagmawi.dev/api",
+//             "https://www.dagmawi.dev",
+//             "https://www.dagmawi.dev/api",
 //         ],
-//         allowHeaders: ["Content-Type", "Authorization"],
-//         allowMethods: ["POST", "GET", "OPTIONS"],
-//         exposeHeaders: ["Content-Length"],
-//         maxAge: 600,
 //         credentials: true,
+//         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//         optionsSuccessStatus: 200,
+//         preflightContinue: true,
 //     })
 // );
+app.use(
+    "*",
+    cors({
+        origin: [
+            "http://localhost:5173",
+            "http://localhost:5173/api",
+            "http://localhost:5173/api/auth",
+            "https://saw-5.vercel.app",
+            "https://www.scholarxiv.com",
+            "https://scholarxiv.com",
+        ],
+        allowHeaders: ["Content-Type", "Authorization"],
+        allowMethods: ["POST", "GET", "OPTIONS"],
+        exposeHeaders: ["Content-Length"],
+        maxAge: 600,
+        credentials: true,
+    })
+);
 
 // app.use(
 //     csrf({
