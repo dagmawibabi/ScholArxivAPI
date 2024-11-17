@@ -38,6 +38,7 @@ export const auth = betterAuth({
     // },
     advanced: {
         crossSubDomainCookies: { enabled: true, domain: "dagmawi.dev" },
+        disableCSRFCheck: true,
     },
     // plugins: [multiSession()],
 });
