@@ -36,8 +36,8 @@ export const auth = betterAuth({
     //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     //   },
     // },
-    // advanced: {
-    //     crossSubDomainCookies: { enabled: true },
-    // },
+    advanced: {
+        crossSubDomainCookies: { enabled: true },
+    },
     // plugins: [multiSession()],
 });
