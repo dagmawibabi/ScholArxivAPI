@@ -37,7 +37,7 @@ export const auth = betterAuth({
     //   },
     // },
     advanced: {
-        crossSubDomainCookies: { enabled: true },
+        crossSubDomainCookies: { enabled: true, domain: "scholarxiv.com" },
     },
     // plugins: [multiSession()],
 });
