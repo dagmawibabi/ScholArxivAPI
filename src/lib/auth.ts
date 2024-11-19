@@ -39,7 +39,7 @@ export const auth = betterAuth({
     advanced: {
         crossSubDomainCookies: {
             enabled: false,
-            domain: "http://scholarxiv.com",
+            domain: "https://scholarxiv.com",
         },
         disableCSRFCheck: true,
         useSecureCookies: true,
