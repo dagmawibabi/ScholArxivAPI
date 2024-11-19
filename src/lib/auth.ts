@@ -36,13 +36,13 @@ export const auth = betterAuth({
     //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     //   },
     // },
-    advanced: {
-        crossSubDomainCookies: {
-            enabled: false,
-            domain: "https://scholarxiv.com",
-        },
-        disableCSRFCheck: true,
-        useSecureCookies: true,
-    },
+    // advanced: {
+    //     crossSubDomainCookies: {
+    //         enabled: false,
+    //         domain: "http://localhost:5173",
+    //     },
+    //     disableCSRFCheck: true,
+    //     useSecureCookies: true,
+    // },
     // plugins: [multiSession()],
 });
