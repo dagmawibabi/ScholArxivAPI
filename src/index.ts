@@ -41,23 +41,16 @@ app.use(
     "*",
     cors({
         origin: [
-            "http://localhost:5173",
-            "http://localhost:5173/api",
-            "http://localhost:5173/api/auth",
-
-            "https://saw-5.vercel.app",
-
-            "https://scholarxiv.com",
-            "https://scholarxiv.com/api",
-            "https://www.scholarxiv.com",
-            "https://www.scholarxiv.com/api",
-            "https://www.scholarxiv.com/api/auth",
-
-            // "https://dagmawi.dev",
-            // "https://dagmawi.dev/api",
-            // "https://www.dagmawi.dev",
-            // "https://www.dagmawi.dev/api",
-            // "https://www.dagmawi.dev/api/api",
+            process.env.LOCAL_ORIGIN!,
+            process.env.LOCAL_API_ORIGIN!,
+            process.env.LOCAL_API_AUTH_ORIGIN!,
+            process.env.SAW_ORIGIN!,
+            process.env.SCHOLARXIV_ORIGIN!,
+            process.env.SCHOLARXIV_ALT_ORIGIN!,
+            process.env.DAGMAWI_ORIGIN!,
+            process.env.DAGMAWI_API_ORIGIN!,
+            process.env.DAGMAWI_DEV_ORIGIN!,
+            process.env.DAGMAWI_DEV_API_ORIGIN!,
         ],
         allowHeaders: ["Content-Type", "Authorization"],
         allowMethods: ["POST", "GET", "OPTIONS"],

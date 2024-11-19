@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { db } from "./db";
+require("dotenv").config();
 
 export const auth = betterAuth({
     database: mongodbAdapter(db),
@@ -12,16 +13,16 @@ export const auth = betterAuth({
         },
     },
     trustedOrigins: [
-        "http://localhost:5173",
-        "http://localhost:5173/api",
-        "http://localhost:5173/api/auth",
-        "https://saw-5.vercel.app",
-        "https://www.scholarxiv.com",
-        "https://scholarxiv.com",
-        // "https://dagmawi.dev",
-        // "https://dagmawi.dev/api",
-        // "https://www.dagmawi.dev",
-        // "https://www.dagmawi.dev/api",
+        process.env.LOCAL_ORIGIN!,
+        process.env.LOCAL_API_ORIGIN!,
+        process.env.LOCAL_API_AUTH_ORIGIN!,
+        process.env.SAW_ORIGIN!,
+        process.env.SCHOLARXIV_ORIGIN!,
+        process.env.SCHOLARXIV_ALT_ORIGIN!,
+        process.env.DAGMAWI_ORIGIN!,
+        process.env.DAGMAWI_API_ORIGIN!,
+        process.env.DAGMAWI_DEV_ORIGIN!,
+        process.env.DAGMAWI_DEV_API_ORIGIN!,
     ],
     //! Uncomment when you need social logins
     // socialProviders: {
@@ -36,13 +37,13 @@ export const auth = betterAuth({
     //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     //   },
     // },
-    // advanced: {
-    //     crossSubDomainCookies: {
-    //         enabled: false,
-    //         domain: "http://localhost:5173",
-    //     },
-    //     disableCSRFCheck: true,
-    //     useSecureCookies: true,
-    // },
+    advanced: {
+        crossSubDomainCookies: {
+            enabled: process.env.ENABLE_CROSS_SUBDOMAIN === "true",
+            domain: process.env.CROSS_SUBDOMAIN,
+        },
+        disableCSRFCheck: process.env.DISABLE_CSRF === "true",
+        useSecureCookies: process.env.USE_SECURE_COOKIES === "true",
+    },
     // plugins: [multiSession()],
 });
