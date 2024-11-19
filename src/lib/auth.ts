@@ -39,9 +39,9 @@ export const auth = betterAuth({
     advanced: {
         crossSubDomainCookies: {
             enabled: false,
-            // domain: "http://localhost:5173",
+            domain: "http://scholarxiv.com",
         },
-        disableCSRFCheck: false,
+        disableCSRFCheck: true,
         useSecureCookies: true,
     },
     // plugins: [multiSession()],

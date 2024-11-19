@@ -48,6 +48,7 @@ app.use(
             "https://www.scholarxiv.com",
             "https://scholarxiv.com",
             "https://dagmawi.dev",
+            "https://dagmawi.dev/api",
             "https://www.dagmawi.dev",
             "https://www.dagmawi.dev/api",
         ],
