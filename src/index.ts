@@ -38,7 +38,6 @@ const app = new Hono();
 //     })
 // );
 app.use(
-    "*",
     cors({
         origin: [
             process.env.LOCAL_ORIGIN!,
