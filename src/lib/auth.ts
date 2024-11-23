@@ -13,6 +13,9 @@ export const auth = betterAuth({
         },
     },
     trustedOrigins: [
+        "https://scholarxiv.com",
+        "https://www.scholarxiv.com",
+        "https://www.scholarxiv.com/api/sign_in",
         process.env.LOCAL_ORIGIN!,
         // process.env.LOCAL_API_ORIGIN!,
         // process.env.LOCAL_API_AUTH_ORIGIN!,
