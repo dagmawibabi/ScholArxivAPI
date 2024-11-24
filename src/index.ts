@@ -18,7 +18,7 @@ const app = new Hono();
 app.use(
     "*",
     cors({
-        origin: "https://scholarxiv.com",
+        origin: "https://www.scholarxiv.com",
         allowHeaders: [
             "X-Custom-Header",
             "Upgrade-Insecure-Requests",
