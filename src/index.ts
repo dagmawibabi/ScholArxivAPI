@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
-// var cors = require("cors");
+// import { cors } from "hono/cors";
+var cors = require("cors");
 import { auth } from "./lib/auth";
 import arxiv from "./routes/arxiv";
 import gemini from "./routes/ai";
@@ -14,6 +14,17 @@ require("dotenv").config();
 
 // App
 const app = new Hono();
+
+app.use(
+    "*",
+    cors({
+        origin: "https://scholarxiv.com",
+        credentials: true,
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        optionsSuccessStatus: 200,
+        preflightContinue: true,
+    })
+);
 
 // Simple CORS Middleware
 // app.use(
@@ -37,31 +48,32 @@ const app = new Hono();
 //         preflightContinue: true,
 //     })
 // );
-app.use(
-    "*",
-    cors({
-        origin: [
-            // "https://scholarxiv.com",
-            // "https://www.scholarxiv.com",
-            // "https://www.scholarxiv.com/api/sign_in",
-            // process.env.LOCAL_ORIGIN!,
-            // process.env.LOCAL_API_ORIGIN!,
-            // process.env.LOCAL_API_AUTH_ORIGIN!,
-            // process.env.SAW_ORIGIN!,
-            process.env.SCHOLARXIV_ORIGIN!,
-            // process.env.SCHOLARXIV_ALT_ORIGIN!,
-            // process.env.DAGMAWI_ORIGIN!,
-            // process.env.DAGMAWI_API_ORIGIN!,
-            // process.env.DAGMAWI_DEV_ORIGIN!,
-            // process.env.DAGMAWI_DEV_API_ORIGIN!,
-        ],
-        allowHeaders: ["Content-Type", "Authorization"],
-        allowMethods: ["POST", "GET", "OPTIONS"],
-        exposeHeaders: ["Content-Length"],
-        maxAge: 600,
-        credentials: true,
-    })
-);
+
+// app.use(
+//     "*",
+//     cors({
+//         origin: [
+// "https://scholarxiv.com",
+// "https://www.scholarxiv.com",
+// "https://www.scholarxiv.com/api/sign_in",
+// process.env.LOCAL_ORIGIN!,
+// process.env.LOCAL_API_ORIGIN!,
+// process.env.LOCAL_API_AUTH_ORIGIN!,
+// process.env.SAW_ORIGIN!,
+// process.env.SCHOLARXIV_ORIGIN!,
+// process.env.SCHOLARXIV_ALT_ORIGIN!,
+// process.env.DAGMAWI_ORIGIN!,
+// process.env.DAGMAWI_API_ORIGIN!,
+// process.env.DAGMAWI_DEV_ORIGIN!,
+// process.env.DAGMAWI_DEV_API_ORIGIN!,
+//         ],
+//         allowHeaders: ["Content-Type", "Authorization"],
+//         allowMethods: ["POST", "GET", "OPTIONS"],
+//         exposeHeaders: ["Content-Length"],
+//         maxAge: 600,
+//         credentials: true,
+//     })
+// );
 
 // app.use(
 //     csrf({

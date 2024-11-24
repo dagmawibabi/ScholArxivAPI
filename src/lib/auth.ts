@@ -12,21 +12,22 @@ export const auth = betterAuth({
             console.log(`Reset password url: ${url}`);
         },
     },
-    trustedOrigins: [
-        // "https://scholarxiv.com",
-        // "https://www.scholarxiv.com",
-        // "https://www.scholarxiv.com/api/sign_in",
-        // process.env.LOCAL_ORIGIN!,
-        // process.env.LOCAL_API_ORIGIN!,
-        // process.env.LOCAL_API_AUTH_ORIGIN!,
-        // process.env.SAW_ORIGIN!,
-        process.env.SCHOLARXIV_ORIGIN!,
-        // process.env.SCHOLARXIV_ALT_ORIGIN!,
-        // process.env.DAGMAWI_ORIGIN!,
-        // process.env.DAGMAWI_API_ORIGIN!,
-        // process.env.DAGMAWI_DEV_ORIGIN!,
-        // process.env.DAGMAWI_DEV_API_ORIGIN!,
-    ],
+    trustedOrigin: "https://scholarxiv.com",
+    // [
+    // "https://scholarxiv.com",
+    // "https://www.scholarxiv.com",
+    // "https://www.scholarxiv.com/api/sign_in",
+    // process.env.LOCAL_ORIGIN!,
+    // process.env.LOCAL_API_ORIGIN!,
+    // process.env.LOCAL_API_AUTH_ORIGIN!,
+    // process.env.SAW_ORIGIN!,
+    // process.env.SCHOLARXIV_ORIGIN!,
+    // process.env.SCHOLARXIV_ALT_ORIGIN!,
+    // process.env.DAGMAWI_ORIGIN!,
+    // process.env.DAGMAWI_API_ORIGIN!,
+    // process.env.DAGMAWI_DEV_ORIGIN!,
+    // process.env.DAGMAWI_DEV_API_ORIGIN!,
+    // ],
     //! Uncomment when you need social logins
     // socialProviders: {
     //   github: {
