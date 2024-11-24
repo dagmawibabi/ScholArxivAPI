@@ -12,7 +12,7 @@ export const auth = betterAuth({
             console.log(`Reset password url: ${url}`);
         },
     },
-    trustedOrigin: "https://scholarxiv.com",
+    trustedOrigin: "https://www.scholarxiv.com/auth/sign_in",
     // [
     // "https://scholarxiv.com",
     // "https://www.scholarxiv.com",
