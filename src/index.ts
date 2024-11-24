@@ -16,11 +16,10 @@ require("dotenv").config();
 const app = new Hono();
 
 app.use(
-    "*",
     cors({
         origin: "https://scholarxiv.com",
-        credentials: true,
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        credentials: true,
         optionsSuccessStatus: 200,
         preflightContinue: true,
     })
