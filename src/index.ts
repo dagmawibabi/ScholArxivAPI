@@ -16,14 +16,39 @@ require("dotenv").config();
 const app = new Hono();
 
 app.use(
+    "*",
     cors({
         origin: "https://scholarxiv.com",
-        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+        allowHeaders: [
+            "X-Custom-Header",
+            "Upgrade-Insecure-Requests",
+            "Content-Type",
+            "Authorization",
+        ],
+        allowMethods: [
+            "GET",
+            "HEAD",
+            "PUT",
+            "POST",
+            "DELETE",
+            "PATCH",
+            "OPTIONS",
+        ],
+        exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
+        maxAge: 600,
         credentials: true,
-        optionsSuccessStatus: 200,
-        preflightContinue: true,
     })
 );
+
+// app.use(
+//     cors({
+//         origin: "https://scholarxiv.com",
+//         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//         credentials: true,
+//         optionsSuccessStatus: 200,
+//         preflightContinue: true,
+//     })
+// );
 
 // Simple CORS Middleware
 // app.use(
