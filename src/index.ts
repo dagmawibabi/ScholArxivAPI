@@ -36,7 +36,7 @@ app.use(
         ],
         exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
         maxAge: 600,
-        // credentials: true,
+        credentials: true,
     })
 );
 
