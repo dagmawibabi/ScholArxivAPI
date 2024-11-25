@@ -40,6 +40,17 @@ app.use(
     })
 );
 
+app.options("*", (c) => {
+    return c.text("", 204, {
+        "Access-Control-Allow-Origin": "https://www.scholarxiv.com",
+        "Access-Control-Allow-Methods":
+            "GET, HEAD, PUT, POST, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers":
+            "X-Custom-Header, Upgrade-Insecure-Requests, Content-Type, Authorization",
+        "Access-Control-Max-Age": "600",
+    });
+});
+
 // app.use(
 //     cors({
 //         origin: "https://scholarxiv.com",
