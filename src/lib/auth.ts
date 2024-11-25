@@ -12,7 +12,7 @@ export const auth = betterAuth({
             console.log(`Reset password url: ${url}`);
         },
     },
-    trustedOrigin: "https://www.dagmawi.dev/auth/sign_in",
+    trustedOrigin: "https://www.dagmawi.dev/api/auth/sign_in",
     // [
     // "https://scholarxiv.com",
     // "https://www.scholarxiv.com",

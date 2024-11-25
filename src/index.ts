@@ -18,7 +18,7 @@ const app = new Hono();
 app.use(
     "*",
     cors({
-        origin: "https://www.dagmawi.dev",
+        origin: "https://www.dagmawi.dev/api/",
         allowHeaders: [
             "X-Custom-Header",
             "Upgrade-Insecure-Requests",
