@@ -18,7 +18,7 @@ const app = new Hono();
 app.use(
     "*",
     cors({
-        origin: "https://www.scholarxiv.com",
+        origin: "https://www.dagmawi.dev",
         allowHeaders: [
             "X-Custom-Header",
             "Upgrade-Insecure-Requests",
@@ -42,7 +42,7 @@ app.use(
 
 app.options("*", (c) => {
     return c.text("", 204, {
-        "Access-Control-Allow-Origin": "https://www.scholarxiv.com",
+        "Access-Control-Allow-Origin": "https://www.dagmawi.dev",
         "Access-Control-Allow-Methods":
             "GET, HEAD, PUT, POST, DELETE, PATCH, OPTIONS",
         "Access-Control-Allow-Headers":
