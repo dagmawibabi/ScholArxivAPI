@@ -19,21 +19,24 @@ app.use(
     "/api/*",
     cors({
         origin: (origin, c) => {
-            console.log("Origin: ", origin);
-            console.log("Headers: ", c.req.headers);
-            const allowedOrigins = ["https://www.dagmawi.dev", "https://www.scholarxiv.com", "https://scholarxiv.com"];
+            // console.log("Origin: ", origin);
+            // console.log("Headers: ", c.req.headers);
+            const allowedOrigins = [
+                "https://www.dagmawi.dev",
+                "https://www.scholarxiv.com",
+                "https://scholarxiv.com",
+            ];
             if (allowedOrigins.indexOf(origin) !== -1) {
                 return origin;
             }
             return "https://www.dagmawi.dev";
         },
-    allowMethods: ['POST', 'GET', 'OPTIONS'],
-    exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
-    maxAge: 600,
-    credentials: true,
+        allowMethods: ["POST", "GET", "OPTIONS"],
+        exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
+        maxAge: 600,
+        credentials: true,
     })
 );
-
 
 app.options("api/*", (c) => {
     return c.text("", 204, {
@@ -45,7 +48,6 @@ app.options("api/*", (c) => {
         "Access-Control-Max-Age": "600",
     });
 });
-
 
 // Intro
 app.get("api/", (c) => {
@@ -60,10 +62,10 @@ app.route("/api/like", like);
 app.route("/api/comment", comment);
 
 //Auth
-app.on(["POST", "GET"], "/api/auth/**", async (c) => {
-console.log("Auth Handler");
-    return auth.handler(c.req.raw);
-});
+// app.on(["POST", "GET"], "/api/auth/**", async (c) => {
+// console.log("Auth Handler");
+//     return auth.handler(c.req.raw);
+// });
 
 // PORT
 var port = process.env.PORT ? Number.parseInt(process.env.PORT) : 6400;
