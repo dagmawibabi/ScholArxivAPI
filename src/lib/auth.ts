@@ -12,7 +12,7 @@ export const auth = betterAuth({
             console.log(`Reset password url: ${url}`);
         },
     },
-    trustedOrigin: "https://www.dagmawi.dev/api/auth/sign_in",
+    trustedOrigins: ["http://www.dagmawi.dev","https://www.scholarxiv.com"],
     // [
     // "https://scholarxiv.com",
     // "https://www.scholarxiv.com",
@@ -42,6 +42,10 @@ export const auth = betterAuth({
     //   },
     // },
     advanced: {
+defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true
+    },
         crossSubDomainCookies: {
             enabled: process.env.ENABLE_CROSS_SUBDOMAIN === "true",
             domain: process.env.CROSS_SUBDOMAIN,

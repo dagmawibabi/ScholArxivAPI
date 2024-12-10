@@ -16,31 +16,26 @@ require("dotenv").config();
 const app = new Hono();
 
 app.use(
-    "*",
+    "/api/*",
     cors({
-        origin: "https://www.dagmawi.dev/api/",
-        allowHeaders: [
-            "X-Custom-Header",
-            "Upgrade-Insecure-Requests",
-            "Content-Type",
-            "Authorization",
-        ],
-        allowMethods: [
-            "GET",
-            "HEAD",
-            "PUT",
-            "POST",
-            "DELETE",
-            "PATCH",
-            "OPTIONS",
-        ],
-        exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
-        maxAge: 600,
-        credentials: true,
+        origin: (origin, c) => {
+            console.log("Origin: ", origin);
+            console.log("Headers: ", c.req.headers);
+            const allowedOrigins = ["https://www.dagmawi.dev", "https://www.scholarxiv.com", "https://scholarxiv.com"];
+            if (allowedOrigins.indexOf(origin) !== -1) {
+                return origin;
+            }
+            return "https://www.dagmawi.dev";
+        },
+    allowMethods: ['POST', 'GET', 'OPTIONS'],
+    exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+    maxAge: 600,
+    credentials: true,
     })
 );
 
-app.options("*", (c) => {
+
+app.options("api/*", (c) => {
     return c.text("", 204, {
         "Access-Control-Allow-Origin": "https://www.scholarxiv.com",
         "Access-Control-Allow-Methods":
@@ -51,79 +46,10 @@ app.options("*", (c) => {
     });
 });
 
-// app.use(
-//     cors({
-//         origin: "https://scholarxiv.com",
-//         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//         credentials: true,
-//         optionsSuccessStatus: 200,
-//         preflightContinue: true,
-//     })
-// );
-
-// Simple CORS Middleware
-// app.use(
-//     "*",
-//     cors({
-//         origin: [
-//             "http://localhost:5173",
-//             "http://localhost:5173/api",
-//             "http://localhost:5173/api/auth",
-//             "https://saw-5.vercel.app",
-//             "https://www.scholarxiv.com",
-//             "https://scholarxiv.com",
-//             "https://dagmawi.dev",
-//             "https://dagmawi.dev/api",
-//             "https://www.dagmawi.dev",
-//             "https://www.dagmawi.dev/api",
-//         ],
-//         credentials: true,
-//         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//         optionsSuccessStatus: 200,
-//         preflightContinue: true,
-//     })
-// );
-
-// app.use(
-//     "*",
-//     cors({
-//         origin: [
-// "https://scholarxiv.com",
-// "https://www.scholarxiv.com",
-// "https://www.scholarxiv.com/api/sign_in",
-// process.env.LOCAL_ORIGIN!,
-// process.env.LOCAL_API_ORIGIN!,
-// process.env.LOCAL_API_AUTH_ORIGIN!,
-// process.env.SAW_ORIGIN!,
-// process.env.SCHOLARXIV_ORIGIN!,
-// process.env.SCHOLARXIV_ALT_ORIGIN!,
-// process.env.DAGMAWI_ORIGIN!,
-// process.env.DAGMAWI_API_ORIGIN!,
-// process.env.DAGMAWI_DEV_ORIGIN!,
-// process.env.DAGMAWI_DEV_API_ORIGIN!,
-//         ],
-//         allowHeaders: ["Content-Type", "Authorization"],
-//         allowMethods: ["POST", "GET", "OPTIONS"],
-//         exposeHeaders: ["Content-Length"],
-//         maxAge: 600,
-//         credentials: true,
-//     })
-// );
-
-// app.use(
-//     csrf({
-//         origin: [
-//             "http://localhost:5173",
-//             "https://schol-arxiv-web.vercel.app",
-//             "https://www.ScholArxiv.com",
-//             "https://saw-5.vercel.app",
-//         ],
-//     })
-// );
 
 // Intro
-app.get("/", (c) => {
-    return c.text("Welcome to ScholArxiv API");
+app.get("api/", (c) => {
+    return c.text("Welcome to ScholArxiv API!");
 });
 
 // Routes
@@ -135,6 +61,7 @@ app.route("/api/comment", comment);
 
 //Auth
 app.on(["POST", "GET"], "/api/auth/**", async (c) => {
+console.log("Auth Handler");
     return auth.handler(c.req.raw);
 });
 
